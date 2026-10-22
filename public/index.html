@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Field Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.mjs"></script>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <p class="eyebrow">FIELD OPERATIONS / PRACTICE WORKSPACE</p>
+      <h1 id="app-title">Field Lab</h1>
+      <p class="intro">Small changes. Independent sessions. Visible results.</p>
+      <p id="banner" class="banner">Loading training configuration...</p>
+      <dl id="identity" class="identity" aria-label="Server identity"></dl>
+    </header>
+    <main>
+      <p id="error" role="alert" hidden></p>
+      <section aria-label="Board summary" class="summary" id="summary"></section>
+      <div class="board-heading">
+        <div><h2>Service board</h2><p>Explore a ticket, move its status, or reset your practice run.</p></div>
+        <button id="reset" type="button" disabled>Reset demo</button>
+      </div>
+      <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+      <div class="board-layout">
+        <section aria-label="Service issues"><ul id="issues" class="issues"></ul></section>
+        <aside id="detail" aria-labelledby="detail-heading">
+          <p class="eyebrow">TICKET DETAILS</p>
+          <h2 id="detail-heading">Choose a ticket</h2>
+          <p>Select any issue to inspect its details.</p>
+        </aside>
+      </div>
+    </main>
+    <footer>Local memory only. Reloading resets the board. No external systems are connected.</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+instructions: |
+  This is a local-only training app with synthetic data and no dependencies.
+  Read README.md and the assigned prompt in docs/workshop.md.
+  Implement only the assigned exercise; status filtering and priority sorting
+  are intentionally absent from the baseline.
+  Keep configuration allowlisted, bind only to loopback, and use dynamic ports.
+  Never commit .env or print unrelated environment variables.
+  Run npm test and inspect the assigned session's app in Browser canvas.
+scripts:
+  - name: Run training app
+    command: npm start
+  - name: Test
+    command: npm test
+server_ready_pattern: 'Local:\s+(http://127\.0\.0\.1:\d+)'
+auto_open_in_browser: true

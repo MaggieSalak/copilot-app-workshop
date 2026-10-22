@@ -1,0 +1,14 @@
+{
+  "name": "copilot-app-workshop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A local, synthetic field-service board for a hands-on Copilot App workshop.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test"
+  }
+}
