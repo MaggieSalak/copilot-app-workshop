@@ -1,85 +1,75 @@
-# Copilot App field lab
+# Copilot App workshop
 
-A 30-minute hands-on workshop for experienced forward-deployed engineers and solution engineers who already use GitHub and HVE. Supervise two independent agent sessions, inspect their work in Browser canvas, and decide whether each result meets its acceptance criteria.
+Take a small UI change from GitHub issue to pull request. You need Git, Node.js 24 or later, and Copilot App signed in to GitHub. The webapp uses synthetic data and has no dependencies; no `npm install` is needed.
 
-The sample is a synthetic field-service issue board. Its baseline supports ticket selection, status changes, summary counts, and reset. **Status filtering and priority sorting are learner exercises, not completed features.** No Squad, external services, credentials, accounts for the sample, database, or cloud deployment is needed.
+## 1. Fork and clone
 
-## Mandatory pre-work
+[Fork this repository on GitHub](https://github.com/algattik/copilot-app-workshop/fork). In Copilot App, start a session, choose **Clone repository**, and select **your fork**, not the upstream repository.
 
-Complete this before the 30-minute session. Budget 10-15 minutes; resolve access and installation problems beforehand.
+## 2. Choose a color in the main checkout
 
-1. Install and sign in to GitHub Copilot App with access to an agent model. Install Git and **Node.js 24 or later**. Confirm `git --version`, `node --version`, and `npm --version` work in the terminal the App uses. The sample has no package dependencies: **do not run `npm install`**.
-2. Clone this repository and add that checkout as a project in Copilot App. Use a **local, worktree-backed** project, not cloud execution or two sessions sharing a branch checkout. On a supported local execution host, the Browser canvas must be able to reach the loopback URL.
-3. Review `.github/github-app.yml` before accepting the App's repository configuration. Its two manual scripts run `npm start` and `npm test`; there are no automatic setup, copy, publish, or deployment scripts.
-4. In the registered checkout, create `.env` from `.env.example` **only if `.env` does not already exist**. POSIX shell: `test -e .env || cp .env.example .env`. PowerShell: `if (-not (Test-Path .env)) { Copy-Item .env.example .env }`. Review an existing file yourself; use a dedicated training checkout containing synthetic values only. Never point the exercise at real credentials.
-5. Run `npm test`, then `npm start`. Open the printed `Local: http://127.0.0.1:<port>` URL in Browser canvas. Confirm six tickets, a synthetic-data banner, and workspace/branch/instance/port identity. Select a ticket, change its status, then use **Reset demo**. Stop the server with Ctrl+C.
-6. Complete the [configuration provisioning preflight](docs/workshop.md#configuration-provisioning-preflight) using a disposable App-created worktree session. This is essential: native `.worktreeinclude` behavior has not been established for every App build. Record whether native provisioning was observed or the explicit manual fallback was needed.
-7. Check that your team's expected HVE skills or agents are visible in the App if you intend to use them. HVE is familiar context for this audience, not a runtime dependency of this exercise; no particular HVE agent or installation is required.
+Select **This computer**, **Current checkout**, branch **main**, and **Interactive** mode. This uses the cloned checkout rather than creating another worktree. Ask Copilot:
 
-**Ready means:** the baseline runs, tests pass, Browser canvas opens the app, you can create isolated worktree sessions, and you know how `.env` will arrive in each one. Do not spend the timed workshop installing tools.
-
-## Run and inspect
-
-```sh
-npm start
+```text
+Confirm this is my fork's main checkout. If .env is missing, copy
+.env.example to .env. Set only WORKSHOP_ACCENT in .env to violet;
+preserve the other values. Never commit .env or print unrelated
+environment variables.
 ```
 
-The OS assigns an available port on `127.0.0.1`; each server prints its own URL. There is no fixed port and the server does not use `COPILOT_PORT` (that variable is the App's WebSocket port). The App's **Run training app** script can detect this URL and open its integrated browser after configuration trust. If automatic opening is unavailable, ask the agent to open the exact printed URL in the existing Browser canvas.
+Choose `teal`, `blue`, or `violet` in that prompt. This performs `cp .env.example .env` only when `.env` is missing.
 
-Use the visible workspace, branch, short server-instance ID, and port to distinguish sessions. The server reads `.env` on startup. Restart it after config or server changes, and use the newly printed URL; reload the page after client edits by restarting as well, since the server snapshots static assets at startup.
+## 3. Run and inspect
 
-Board changes live only in the browser tab. Reloading or resetting restores the six fictional records. Nothing controls equipment, calls an external API, or persists user input.
+Review the repository configuration before accepting it, then ask:
 
-## Local configuration contract
+```text
+Run npm test. Start the app with npm start and open its printed
+loopback URL in Browser canvas. Keep the server running.
+```
 
-| File or field | Purpose |
-| --- | --- |
-| `.env.example` | Tracked, fully populated synthetic starter values. |
-| `.env` | Ignored local configuration. Required to start; never commit it. |
-| `.worktreeinclude` | Tracked candidate provisioning list containing the literal `.env` entry. Native App behavior must be checked separately. |
-| `WORKSHOP_TITLE` | Required public title, 1-64 characters. |
-| `WORKSHOP_ACCENT` | Required public palette: `teal`, `blue`, or `violet`. |
-| `WORKSHOP_BANNER` | Required public banner, 1-140 characters. Keep it explicitly synthetic. |
+Check your chosen color, six synthetic tickets, and the workspace/branch identity. Select a ticket, change its status, and click **Reset demo**. The server chooses an available port; always use its exact printed URL. Restart after config or client edits.
 
-`config.mjs` explicitly reads the current working directory's `.env` using Node's dotenv parser. Required values must be non-empty and single-line; unknown fields are ignored. Values are not taken from shell environment variables. Only `{ title, accent, banner }` is sent as configuration to the browser, and visible strings are rendered as text. The server also sends the synthetic tickets and a limited identity object, never the whole process environment or an absolute checkout path.
+## 4. Create an issue in your fork
 
-**Provisioning is not loading.** `.worktreeinclude` neither loads dotenv values into this Node app nor establishes browser exposure. Those are separate responsibilities. No custom script in this repository implements or emulates `.worktreeinclude`.
+Ask Copilot:
 
-Native `.worktreeinclude` semantics are **unverified as of 2026-10-22**: the primary App pages linked below do not specify copying versus linking, source-checkout selection, updates to existing sessions, or cloud support. The workshop includes an observation protocol and an explicitly labelled manual fallback, not a claim that these behaviors are supported.
+```text
+Create a GitHub issue in my fork titled "Rename Reset demo to
+Restore demo". Request only the visible button-label change;
+keep reset behavior unchanged. Do not implement it yet.
+```
 
-## Workshop and code map
+Confirm that the issue belongs to your fork.
 
-Follow the [30-minute workshop guide and exact prompts](docs/workshop.md).
+## 5. Create an issue session, implement, and inspect
 
-| Path | Responsibility |
-| --- | --- |
-| `server.mjs` | Loopback HTTP server, dynamic port, workspace identity, fixed public routes. |
-| `config.mjs` | Required local configuration validation and public allowlist. |
-| `public/board.mjs` | Synthetic fixtures and status/summary behavior. |
-| `public/app.mjs` | Ticket UI and per-tab state. |
-| `public/styles.css` | Responsive layout and three controlled accent palettes. |
-| `test/*.test.mjs` | Built-in Node tests for config, board behavior, HTTP exposure, and concurrent servers. |
-| `.github/github-app.yml` | Reviewed App instructions, manual scripts, and URL detection. |
+In the App's **Issues** sidebar, open your issue and click **New session**. Use **This computer**, **New worktree** based on **main**, and **Interactive** mode. The App creates the worktree; no manual Git worktree setup is needed. Ask Copilot to implement only this issue.
 
-Run all automated checks with `npm test`. There is no separate build or lint toolchain. Browser acceptance checks are in the workshop guide. The tests exercise concurrent independent server roots; they are **not** evidence of native App provisioning.
+**The new worktree needs `.env` before the webapp can run.** It is ignored by Git, so it is not part of the checkout. Check whether the App provisioned it; if it is missing, copy only the synthetic `.env` from your original checkout into this worktree. Do not overwrite an existing file or commit it. You can ask Copilot to do this, supplying the original checkout path when needed.
 
-## Troubleshooting
+**Before creating a PR, run and inspect the fix yourself.** In the issue session, ask:
 
-| Symptom | Action |
-| --- | --- |
-| `Missing .env` | Check the active workspace, complete the provisioning preflight, or use its manual fallback. Do not remove the startup check. |
-| Invalid config | Correct the named field in your own training `.env`; values are intentionally omitted from errors. |
-| Wrong title, branch, or board | Check the canvas URL against that session's terminal and on-page identity. |
-| Server stopped or restarted | Start it again and open its newly printed URL. |
-| Client changes not visible | Restart this session's server, then open the new URL. Static assets are read at startup. |
-| Automatic preview did not open | Review/accept repository configuration, run its manual script, or open the exact URL in Browser canvas manually. |
-| One session's change appears in another | Verify separate worktree paths and branch names; do not use a shared mutable checkout. Each browser tab also has independent board state. |
+```text
+Confirm .env exists in this worktree. Run npm test, start this
+session's app with npm start, and open its exact printed loopback
+URL in Browser canvas. Keep it running for me to inspect.
+```
 
-## Primary references
+Check the page's branch identity so you are not inspecting the original app. Confirm your color and **Restore demo**, change a ticket's status, and click the button to verify reset behavior is unchanged.
 
-- [Copilot App agent sessions](https://docs.github.com/en/copilot/how-tos/github-copilot-app/agent-sessions)
-- [Repository configuration and script environment](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration)
-- [Working with canvases](https://docs.github.com/en/copilot/how-tos/github-copilot-app/working-with-canvas-extensions)
-- [Customizing Copilot App](https://docs.github.com/en/copilot/how-tos/github-copilot-app/customize-github-copilot-app)
+## 6. Create a pull request
 
-This training sample and guide were developed with AI assistance. Review agent changes before publishing or merging them.
+Review the diff, then ask:
+
+```text
+Commit the issue's changes without .env. Push the branch to my fork
+and create a PR targeting main in my fork, linked to this issue.
+Do not merge it.
+```
+
+Approve publishing when prompted. Check the PR's destination, issue link, and diff.
+
+## 7. Archive the session
+
+Ask each session to stop its own app server. Once the issue session's changes are saved in the PR, archive that session using the App's session controls. Leave the PR open for review; archiving a session does not close its issue or merge its PR.
