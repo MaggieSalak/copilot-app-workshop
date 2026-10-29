@@ -46,7 +46,8 @@ Confirm that the issue belongs to your fork.
 
 In the App's **Issues** sidebar, open your issue and click **New session**. Use **This computer**, **New worktree** based on **main**, and **Interactive** mode. The App creates the worktree; no manual Git worktree setup is needed. Ask Copilot to implement only this issue.
 
-**The new worktree needs `.env` before the webapp can run.** It is ignored by Git, so it is not part of the checkout. Check whether the App provisioned it; if it is missing, copy only the synthetic `.env` from your original checkout into this worktree. Do not overwrite an existing file or commit it. You can ask Copilot to do this, supplying the original checkout path when needed.
+> [!IMPORTANT]
+> The webapp needs `.env` in this worktree to start. Copilot App should have copied it from the main worktree because [`.worktreeinclude`](.worktreeinclude) lists `.env`. Confirm the file is present; never commit it.
 
 **Before creating a PR, run and inspect the fix yourself.** In the issue session, ask:
 
